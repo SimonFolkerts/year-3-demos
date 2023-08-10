@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+
+<body>
+
+  <!-- todo list renders here -->
+  <ul id="todos"></ul>
+
+  <!-- todo form to add a new todo -->
+  <form id="todo-form">
+    <input type="text" placeholder="Add a todo">
+    <input type="submit" value="Add Todo">
+  </form>
+
+  <!-- logic -->
+  <script>
+    // SELECT ELEMENTS =========================
+    // get the todo form
+    const todoForm = document.getElementById('todo-form');
+    // get the todos list
+    const todosList = document.getElementById('todos');
+    // get the todo input
+    const todoInput = todoForm.querySelector('input');
+
+    // DATA ====================================
+    // create an array to store the todo data
+    const todoData = [];
+
+    // FUNCTIONS ================================
+    // function that add a new todo item to the todos list, called by the event listener callback
+    const addTodo = (text) => {
+      // add the todo item to the todo data array
+      todoData.push(text);
+
+      // create a new todo item list element
+      const todoItem = document.createElement('li');
+      // set the todo item element text
+      todoItem.innerText = text;
+      // add the todo item to the todos list, inserting it into the DOM
+      todosList.appendChild(todoItem);
+
+      // save the todo data to local storage as a JSON string
+      localStorage.setItem('todos', JSON.stringify(todoData));
+
+      // reset the form
+      todoForm.reset();
+    }
+
+    // LIFECYCLE =================================
+    // get any existing todo data from local storage, or if empty set an empty array
+    const savedTodos = JSON.parse(localStorage.getItem('todos')) || [];
+    // loop through the todo data array and add each saved todo to the todos list
+    savedTodos.forEach(todo => {
+      addTodo(todo)
+    });
+
+    // EVENT LISTENERS ==========================
+    // add an event listener to the form that calls the addTodo function
+    todoForm.addEventListener('submit', (event) => {
+      // prevent the default form submit behavior
+      event.preventDefault();
+      // call the addTodo function, passing the text in the input as an argument
+      addTodo(todoInput.value);
+    });
+
+  </script>
+</body>
+
+</html>
